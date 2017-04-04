@@ -9,7 +9,6 @@ filter2 f (x:xs) = if (f x)	then x : (filter2 f xs)
 							else (filter2 f xs)
 
 -- La funcion f a aplicar -> mi neutro -> la lista en la que quiero aplicar f -> el resultado final
--- Preguntar como generalizar el tipo lista de a, [a]
 foldr2 :: (a -> b -> b) -> b -> [a] -> b
 foldr2 f z [] = z
 foldr2 f z (x:xs) = f x (foldr2 f z xs)

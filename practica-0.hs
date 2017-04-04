@@ -18,31 +18,25 @@ factorial n
 
     -- Auxiliares
 
-divisores :: Int -> [Int] -> [Int]
-divisores n [] = []
-divisores n (x:xs)
-    | mod n x == 0 =  x : divisores n xs
-    | otherwise = divisores n xs
+-- divisores :: Int -> [Int] -> [Int]
+-- divisores n [] = []
+-- divisores n (x:xs)
+--     | mod n x == 0 =  x : divisores n xs
+--     | otherwise = divisores n xs
+
+
+f :: Int -> Int
+f n = floor (realToFrac (sqrt (fromIntegral n)))
 
 esPrimo :: Int -> Bool
-esPrimo 1 = True
-esPrimo n
-    | length (divisores n [2..(n-1)]) == 0 = True
-    | otherwise = False
-
-divisoresPrimos :: Int -> [Int] -> [Int]
-divisoresPrimos n [] = []
-divisoresPrimos n (x:xs)
-    | esPrimo x = x : divisoresPrimos n xs
-    | otherwise = divisoresPrimos n xs
-
-    -- 
+esPrimo = \n -> (foldr (g n) True [2..f n])
+    where g = \n x b -> mod n x /= 0 && b
 
 cantDivisoresPrimos :: Int -> Int
-cantDivisoresPrimos 1 = 1
-cantDivisoresPrimos n = length (divisoresPrimos n (divisores n [2..n]) )
--- 
+cantDivisoresPrimos = \n -> length (filter (f n) [1..n])
+    where f = \n x -> esPrimo x && mod n x == 0
 
+-- 
 -- Ejercicio 3
 
     -- data Maybe a = Nothing | Just a
@@ -60,32 +54,28 @@ aEntero (Right b)
 aEntero (Left n) = n
 
 -- 
-
 -- Ejercicio 4
 
 limpiar :: String -> String -> String
-limpiar s [] = []
-limpiar xs (y:ys)
-    | not (elem y xs) = y : limpiar xs ys
-    | otherwise = limpiar xs ys
-
-    -- Auxiliares
-
-promedio :: [Float] -> Float
-promedio xs = sum(xs) / fromIntegral(length xs)
-
-    -- 
+limpiar ss = filter (f ss)
+    where f = \ss s -> not (elem s ss)
 
 difPromedio :: [Float] -> [Float]
-difPromedio xs = [x - promedio(xs) | x <- xs]
+difPromedio xs = map (\x -> x - promedio xs) xs
+    where promedio = \xs -> sum(xs) / fromIntegral(length xs)
 
 
 todosIguales :: [Int] -> Bool
-todosIguales [] = True
 todosIguales (x:[]) = True
-todosIguales (x:xs)
-    | not (elem x xs) = False
-    | otherwise = todosIguales xs
+todosIguales (x:xs) = foldr (f xs) True (x:xs)
+    where f = \xs x b -> (elem x xs) && b
+
+
+-- todosIguales [] = True
+-- todosIguales (x:[]) = True
+-- todosIguales (x:xs)
+--     | not (elem x xs) = False
+--     | otherwise = todosIguales xs
 
 -- 
 
