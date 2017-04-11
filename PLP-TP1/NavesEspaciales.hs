@@ -22,19 +22,14 @@ pad :: Int -> String
 pad i = replicate i ' '
 
 --Ejercicio 1
-foldNave :: (Componente -> b) -> (Componente -> b -> b) -> NaveEspacial -> b
+foldNave :: (Componente -> b) -> (Componente -> b -> b -> b) -> NaveEspacial -> b
 foldNave fBase fModulo (Base c) = fBase c
 foldNave fBase fModulo (Módulo c subNave1 subNave2) = fModulo c (foldNave fBase fModulo subNave1) (foldNave fBase fModulo subNave2)
 
 --Ejercicio 2
 capacidad :: NaveEspacial -> Int
-capacidad = foldNave fBase fModulo
-				where fBase = (\c -> if c == Contenedor 
-									 then 1
-									 else 0)
-					  fModulo = (\c recursion1 recursion2 -> if c == Contenedor
-					  										 then 1 + recursion1 + recursion2 
-					  										 else recursion1 + recursion2)
+capacidad = foldNave (\c -> if c == Contenedor then 1 else 0) fModulo
+				where fModulo = (\c recursion1 recursion2 -> if (c == Contenedor) then 1 + recursion1 + recursion2  else recursion1 + recursion2)
 
 poderDeAtaque :: NaveEspacial -> Int
 poderDeAtaque = undefined
