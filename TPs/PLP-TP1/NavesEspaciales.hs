@@ -102,16 +102,17 @@ impactar (dir, nivel, tipo) (Módulo comp subNaveIzq subNaveDer)
 
 -- Ejercicio 6
 maniobrar :: NaveEspacial -> [Peligro] -> NaveEspacial
-maniobrar = undefined
+maniobrar nave ps = (foldr f id ps) nave
+						where f = \p recu -> \naveImpactada -> recu (impactar p naveImpactada)
 
 -- Ejercicio 7
 pruebaDeFuego :: [Peligro] -> [NaveEspacial] -> [NaveEspacial]
-pruebaDeFuego = undefined
+pruebaDeFuego ps = filter (\nave -> puedeVolar (maniobrar nave ps))
 
 -- Ejercicio 8
 componentesPorNivel :: NaveEspacial -> Int -> Int
 componentesPorNivel nave n = (foldNave (\_ -> \n -> if n == 0 then 1 else 0) fModulo nave) n
-								where fModulo = (\_ recIzq recDer -> \n -> if n == 0 then 1 else (recIzq (n-1)) + (recDer (n-1)))
+								where fModulo = \_ recIzq recDer -> \n -> if n == 0 then 1 else (recIzq (n-1)) + (recDer (n-1))
 
 ancho :: NaveEspacial -> Int
 ancho nave = foldr (\n recu -> max (componentesPorNivel nave n) recu) 0 [0..altura nave]
