@@ -57,7 +57,12 @@ mayorCapacidad = foldr1	(\nave1 recu -> if capacidad nave1 > capacidad recu then
 
 -- Ejercicio 4
 transformar :: (Componente -> Componente) -> NaveEspacial -> NaveEspacial
-transformar = undefined
+transformar = mapNave
+
+mapNave :: (Componente -> Componente) -> NaveEspacial -> NaveEspacial
+mapNave f = foldNave (\comp ->  Base (f comp)) fModulo
+				where  fModulo = (\comp subNaveNuevaIzq subNaveNuevaDer->  Módulo (f comp) subNaveNuevaIzq subNaveNuevaDer)
+
 
 -- Ejercicio 5
 -- El esquema foldNave no es adecuado para esta funcion ya que 'impactar' recorre la nave parcialmente 
