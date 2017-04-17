@@ -48,19 +48,52 @@ puedeVolar :: NaveEspacial -> Bool
 puedeVolar = (0 <).(recorrerNaveDevolviendo Motor)
 
 mismoPotencial :: NaveEspacial -> NaveEspacial -> Bool
-mismoPotencial nave1 nave2 = capacidad nave1 == capacidad nave2 && poderDeAtaque nave1 == poderDeAtaque nave2 && aceleracion nave1 == aceleracion nave2 && poderDeDefensa nave1 == poderDeDefensa nave2
+mismoPotencial nave1 nave2 = foldr (\comp recu -> recu && (recorrerNaveDevolviendo comp nave1 == recorrerNaveDevolviendo comp nave2)) True [Contenedor, Motor, Escudo, Cañón]
+-- mismoPotencial nave1 nave2 = capacidad nave1 == capacidad nave2 && poderDeAtaque nave1 == poderDeAtaque nave2 && aceleracion nave1 == aceleracion nave2 && poderDeDefensa nave1 == poderDeDefensa nave2
 
 -- Ejercicio 3
 mayorCapacidad :: [NaveEspacial] -> NaveEspacial
-mayorCapacidad = undefined
+mayorCapacidad = foldr1	(\nave1 recu -> if capacidad nave1 > capacidad recu then nave1 else recu)
 
 -- Ejercicio 4
 transformar :: (Componente -> Componente) -> NaveEspacial -> NaveEspacial
 transformar = undefined
 
 -- Ejercicio 5
+-- El esquema foldNave no es adecuado para esta funcion ya que 'impactar' recorre la nave parcialmente 
+-- y sólo aplica la funcion 'realizarImpacto' a la sub-nave que corresponde.
+-- En cambio, si utilizaramos foldNave la funcion 'realizarImpacto' se aplicaria recursivamente a todas 
+-- las sub-naves perdiendo el concepto de Direccion y Nivel que especifica el ejercicio.
+
+dameSubNave :: Dirección -> NaveEspacial -> NaveEspacial
+dameSubNave dir (Módulo c subNave1 subNave2)
+										| dir == Babor = subNave1
+										| dir == Estribor = subNave2
+
+dameRaiz :: NaveEspacial -> Componente
+dameRaiz nave = case nave of
+							(Módulo c subNave1 subNave2) -> c
+							Base c -> c
+
+realizarImpacto :: TipoPeligro -> NaveEspacial -> NaveEspacial
+realizarImpacto tipo nave = case tipo of 
+										Pequeño -> if (dameRaiz nave) == Escudo then nave else Base Contenedor
+										Grande -> Base Contenedor -- preguntar esto, creo que antes no estaba mal
+										Torpedo -> Base Contenedor
+
 impactar :: Peligro -> NaveEspacial -> NaveEspacial
-impactar = undefined
+impactar (dir, nivel, tipo) (Base comp)
+		| nivel == 0 = if (tipo == Grande) && (poderDeAtaque (Base comp) > 0) then realizarImpacto Pequeño (Base comp)
+															  else realizarImpacto tipo (Base comp)
+		| otherwise = Base comp
+
+impactar (dir, nivel, tipo) (Módulo comp subNaveIzq subNaveDer)
+		| nivel == 0 = if tipo == Grande && (poderDeAtaque (Módulo comp subNaveIzq subNaveDer)) > 0 then realizarImpacto Pequeño (Módulo comp subNaveIzq subNaveDer)
+															  else realizarImpacto tipo (Módulo comp subNaveIzq subNaveDer)
+		| otherwise = case dir of 
+								Babor -> Módulo comp (recu subNaveIzq) subNaveDer
+								Estribor -> Módulo comp subNaveIzq (recu subNaveDer)
+			where recu subNave = impactar (dir, nivel-1, tipo) subNave
 
 -- Ejercicio 6
 maniobrar :: NaveEspacial -> [Peligro] -> NaveEspacial
@@ -72,7 +105,14 @@ pruebaDeFuego = undefined
 
 -- Ejercicio 8
 componentesPorNivel :: NaveEspacial -> Int -> Int
-componentesPorNivel = undefined
+componentesPorNivel nave n = (foldNave (\_ -> \n -> if n == 0 then 1 else 0) fModulo nave) n
+								where fModulo = (\_ recIzq recDer -> \n -> if n == 0 then 1 else (recIzq (n-1)) + (recDer (n-1)))
+
+ancho :: NaveEspacial -> Int
+ancho nave = foldr (\n recu -> max (componentesPorNivel nave n) recu) 0 [0..altura nave]
+
+altura :: NaveEspacial -> Int
+altura = foldNave (const 1) (\_ recIzq recDer -> 1 + max recIzq recDer)
 
 dimensiones :: NaveEspacial -> (Int, Int)
-dimensiones = undefined
+dimensiones nave = (altura nave, ancho nave)

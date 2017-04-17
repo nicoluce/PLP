@@ -64,7 +64,16 @@ testsEj4 = test [
   ]
 
 testsEj5 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  -- Caso: Pequeño vs Escudo
+  protegidoNivel1Estribor ~=? impactar (Estribor, 1, Pequeño) protegidoNivel1Estribor,
+  -- Caso: Grande vs (Escudo + Cañon)
+  protegidoNivel1Estribor ~=? impactar (Estribor, 1, Grande) protegidoNivel1Estribor,
+  -- Caso: Torpedo vs X
+  (Módulo Contenedor (Base Motor) (Base Contenedor)) ~=? impactar (Estribor, 1, Torpedo) protegidoNivel1Estribor,
+  -- Caso: Pequeño/Grande/Torpedo vs (subNave sin proteccion)
+  (Módulo Contenedor (Base Contenedor) protegido) ~=? impactar (Babor, 1, Pequeño) protegidoNivel1Estribor,
+  -- Caso: Pequeño/Grande/Torpedo vs Cabina
+  contenedorSolo ~=? impactar (Babor, 0, Grande) protegidoNivel1Estribor
   ]
 
 testsEj6 = test [
@@ -76,9 +85,16 @@ testsEj7 = test [
   ]
 
 testsEj8 = test [
+  -- Caso: nave Base
+  1 ~=? componentesPorNivel soloUnMotor 0,
+  -- Caso: nave Modulo comp subNaveIzq subNaveDer
+  4 ~=? componentesPorNivel nave4 2,
+  -- Caso: nave con subNaves de distinta altura
+  2 ~=? componentesPorNivel desbalanceado 2,
+  -- Caso: nivel > (altura nave)
+  0 ~=? componentesPorNivel protegidoNivel1Estribor 9,
   (4,6) ~=? (dimensiones $ maniobrar nave9 [(Babor,1,Grande),(Babor,2,Torpedo)])
   ]
-
 
 --Ejemplos de referencia para maniobrar:	
 --maniobrar nave9 [(Babor, 0, Grande),(Babor,2,Torpedo),(Estribor,0,Pequeño)] destruye solo el subárbol izquierdo del subárbol izquierdo.
