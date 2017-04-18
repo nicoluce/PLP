@@ -23,6 +23,12 @@ nave10 = Módulo Cañón
     (Módulo Cañón (Módulo Cañón (Base Cañón) (Base Contenedor)) (Módulo Escudo (Base Motor) (Base Escudo))) 
     (Módulo Cañón (Módulo Motor (Base Escudo) (Base Motor)) (Módulo Cañón (Base Contenedor) (Base Cañón)))
 
+nave11 = Módulo Motor nave1 nave1
+naveRestante = Módulo Contenedor (Base Contenedor) (Base Contenedor)
+naveChatarra = Módulo Contenedor (Base Contenedor) (Base Contenedor)
+naveIgualNoAndaba = Módulo Contenedor (Módulo Contenedor (Base Contenedor) (Base Contenedor)) (Módulo Contenedor (Base Contenedor) (Base Contenedor))
+
+
 --naves que figuran en la consigna del tp
 naveEj11 = Módulo Contenedor (Módulo Escudo (Base Cañón) (Base Motor)) (Base Motor)
 naveEj12 = Módulo Contenedor (Base Contenedor) (Base Motor)
@@ -44,6 +50,9 @@ protegidoNivel1Estribor = Módulo Contenedor soloUnMotor protegido
 superProtegido = Módulo Motor protegido protegido
 
 desbalanceado = Módulo Escudo (Base Contenedor) protegido
+
+altaNave = Módulo Contenedor (Módulo Escudo (Módulo Escudo (Base Cañón) (Base Cañón)) (Base Motor)) (Base Motor)
+naveNoMeDan = Módulo Motor (Módulo Escudo (Base Cañón) (Base Cañón)) (Módulo Escudo (Base Cañón) (Base Cañón))
 
 
 --Ejecución de los tests
@@ -83,29 +92,30 @@ testsEj2 = test [
   2 ~=? poderDeAtaque superProtegido,
   1 ~=? poderDeAtaque desbalanceado,
 
-  1 ~=? puedeVolar soloUnMotor,
-  0 ~=? puedeVolar puroContenedor,
-  0 ~=? puedeVolar tresCañones,
-  0 ~=? puedeVolar contenedorYCañon,
-  0 ~=? puedeVolar otroCañon,
-  0 ~=? puedeVolar escudoSinCañon,
-  0 ~=? puedeVolar protegido,
-  1 ~=? puedeVolar protegidoNivel1Estribor,
-  0 ~=? puedeVolar superProtegido,
-  0 ~=? puedeVolar desbalanceado,
+  True ~=? puedeVolar soloUnMotor,
+  False ~=? puedeVolar puroContenedor,
+  False ~=? puedeVolar tresCañones,
+  False ~=? puedeVolar contenedorYCañon,
+  False ~=? puedeVolar otroCañon,
+  False ~=? puedeVolar escudoSinCañon,
+  False ~=? puedeVolar protegido,
+  True ~=? puedeVolar protegidoNivel1Estribor,
+  True ~=? puedeVolar superProtegido,
+  False ~=? puedeVolar desbalanceado,
 
-  1 ~=? mismoPotencial soloUnMotor nave1,
-  0 ~=? mismoPotencial puroContenedor tresCañones,
-  1 ~=? mismoPotencial nave2 nave3,
-  0 ~=? mismoPotencial contenedorYCañon otroCañon,
-  1 ~=? mismoPotencial nave4 nave5,
-  0 ~=? mismoPotencial escudoSinCañon protegido,
-  1 ~=? mismoPotencial nave6 nave7,
-  0 ~=? mismoPotencial protegidoNivel1Estribor superProtegido,
-  0 ~=? mismoPotencial superProtegido desbalanceado
+  True ~=? mismoPotencial soloUnMotor nave1,
+  False ~=? mismoPotencial puroContenedor tresCañones,
+  True ~=? mismoPotencial nave2 nave3,
+  True ~=? mismoPotencial contenedorYCañon otroCañon,
+  True ~=? mismoPotencial nave4 nave5,
+  False ~=? mismoPotencial escudoSinCañon protegido,
+  True ~=? mismoPotencial nave6 nave7,
+  False ~=? mismoPotencial protegidoNivel1Estribor superProtegido,
+  False ~=? mismoPotencial superProtegido desbalanceado
   ]
   
-  testsEj3 = test [
+
+testsEj3 = test [
   nave4 ~=? mayorCapacidad [nave4, nave2, nave3],
   nave5 ~=? mayorCapacidad [nave2, nave3, nave5],
   nave9 ~=? mayorCapacidad [nave7, nave8, nave9],
@@ -113,8 +123,10 @@ testsEj2 = test [
   desbalanceado ~=? mayorCapacidad [desbalanceado, protegido, soloUnMotor]
   ]
 
+
+
 testsEj4 = test [
-  soloUnMotor ~=? transformar (const Motor) nave9,
+  nave11 ~=? transformar (const Motor) naveEj12,
   tresCañones ~=? transformar (\comp -> if comp == Contenedor then Cañón else comp) puroContenedor,
   nave10 ~=? transformar (\comp -> case comp of Escudo -> Cañón
                                                 Cañón -> Contenedor
@@ -136,20 +148,21 @@ testsEj5 = test [
   ]
 
 testsEj6 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
-
-naveEj11 = Módulo Contenedor (Módulo Escudo (Base Cañón) (Base Motor)) (Base Motor)
-naveEj12 = Módulo Contenedor (Base Contenedor) (Base Motor)
-naveEj13 = Módulo Contenedor (Módulo Escudo (Base Motor) (Base Motor)) (Base Motor)
-
-
-
-  
+  naveRestante ~=? maniobrar naveEj11 [(Babor, 1, Pequeño), (Estribor, 1, Torpedo), (Babor, 1, Grande), (Babor, 1, Torpedo)],
+  naveChatarra ~=? maniobrar naveEj12 [(Babor, 1, Torpedo), (Estribor, 1, Torpedo)],
+  naveChatarra ~=? maniobrar altaNave [(Babor, 1, Pequeño), (Babor, 1, Pequeño), (Estribor, 1, Torpedo), (Babor, 2, Grande), (Babor, 3, Torpedo), (Babor, 1, Torpedo)],
+  naveNoMeDan ~=? maniobrar naveNoMeDan [(Babor, 1, Pequeño), (Estribor, 1, Pequeño), (Estribor, 1, Grande), (Babor, 1, Grande)]
   ]
 
 testsEj7 = test [
-  [nave1,nave3,nave9] ~=? pruebaDeFuego [(Babor,1,Grande),(Babor,2,Torpedo),(Estribor, 1, Pequeño)] [nave1,nave2,nave3,nave4,nave5,nave6,nave7,nave8,nave9]
+  [nave1,nave3,nave9] ~=? pruebaDeFuego [(Babor,1,Grande),(Babor,2,Torpedo),(Estribor, 1, Pequeño)] [nave1,nave2,nave3,nave4,nave5,nave6,nave7,nave8,nave9],
+  [naveNoMeDan] ~=? pruebaDeFuego [(Babor, 1, Pequeño), (Estribor, 1, Pequeño), (Estribor, 1, Grande), (Babor, 1, Grande), (Estribor, 1, Torpedo), (Babor, 1, Torpedo)] [naveNoMeDan,altaNave, naveEj11, naveIgualNoAndaba],
+  [soloUnMotor, superProtegido] ~=? pruebaDeFuego [(Babor, 1, Pequeño), (Estribor, 1, Pequeño), (Estribor, 1, Grande), (Babor, 1, Grande), (Estribor, 1, Torpedo), (Babor, 1, Torpedo), (Babor, 2, Pequeño), (Estribor, 2, Pequeño), (Estribor, 2, Grande), (Babor, 2, Grande), (Estribor, 2, Torpedo), (Babor, 2, Torpedo)] [soloUnMotor, superProtegido, desbalanceado]
   ]
+
+
+
+
 
 testsEj8 = test [
 -- componentesPorNivel
