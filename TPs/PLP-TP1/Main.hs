@@ -18,10 +18,16 @@ nave8 = Módulo Contenedor nave1 nave6
 nave9 = Módulo Escudo 
 		(Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
 		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo)))
---nave10 = nave9 pero Escudo por Cañón, Cañón por Contenedor, Contenedor por Motor, Motor por Escudo
+--nave10 = nave9 con reemplazos (Escudo por Cañón, Cañón por Contenedor, Contenedor por Motor, Motor por Escudo)
 nave10 = Módulo Cañón 
     (Módulo Cañón (Módulo Cañón (Base Cañón) (Base Contenedor)) (Módulo Escudo (Base Motor) (Base Escudo))) 
     (Módulo Cañón (Módulo Motor (Base Escudo) (Base Motor)) (Módulo Cañón (Base Contenedor) (Base Cañón)))
+
+--naves que figuran en la consigna del tp
+naveEj11 = Módulo Contenedor (Módulo Escudo (Base Cañón) (Base Motor)) (Base Motor)
+naveEj12 = Módulo Contenedor (Base Contenedor) (Base Motor)
+naveEj13 = Módulo Contenedor (Módulo Escudo (Base Motor) (Base Motor)) (Base Motor)
+
 
 soloUnMotor = Base Motor
 puroContenedor = Módulo Contenedor (Base Contenedor) (Base Contenedor)
@@ -131,6 +137,14 @@ testsEj5 = test [
 
 testsEj6 = test [
   0 ~=? 0 --Cambiar esto por tests verdaderos.
+
+naveEj11 = Módulo Contenedor (Módulo Escudo (Base Cañón) (Base Motor)) (Base Motor)
+naveEj12 = Módulo Contenedor (Base Contenedor) (Base Motor)
+naveEj13 = Módulo Contenedor (Módulo Escudo (Base Motor) (Base Motor)) (Base Motor)
+
+
+
+  
   ]
 
 testsEj7 = test [
