@@ -48,8 +48,8 @@ puedeVolar :: NaveEspacial -> Bool
 puedeVolar = (0 <).(recorrerNaveDevolviendo Motor)
 
 mismoPotencial :: NaveEspacial -> NaveEspacial -> Bool
-mismoPotencial nave1 nave2 = foldr (\comp recu -> recu && (recorrerNaveDevolviendo comp nave1 == recorrerNaveDevolviendo comp nave2)) True [Contenedor, Motor, Escudo, Cañón]
--- mismoPotencial nave1 nave2 = capacidad nave1 == capacidad nave2 && poderDeAtaque nave1 == poderDeAtaque nave2 && aceleracion nave1 == aceleracion nave2 && poderDeDefensa nave1 == poderDeDefensa nave2
+mismoPotencial nave1 nave2 = foldr (\comp recu -> recu && mismaCantidad comp ) True [Contenedor, Motor, Escudo, Cañón]
+								where mismaCantidad comp = recorrerNaveDevolviendo comp nave1 == recorrerNaveDevolviendo comp nave2
 
 -- Ejercicio 3
 mayorCapacidad :: [NaveEspacial] -> NaveEspacial
@@ -66,7 +66,7 @@ mapNave f = foldNave (\comp ->  Base (f comp)) fModulo
 
 -- Ejercicio 5
 -- El esquema foldNave no es adecuado para esta funcion ya que 'impactar' recorre la nave parcialmente 
--- y sólo aplica la funcion 'realizarImpacto' a la sub-nave que corresponde.
+-- y sólo aplica la funcion 'realizarImpacto' a la sub-nave/nivel que corresponde.
 -- En cambio, si utilizaramos foldNave la funcion 'realizarImpacto' se aplicaria recursivamente a todas 
 -- las sub-naves perdiendo el concepto de Direccion y Nivel que especifica el ejercicio.
 
@@ -82,8 +82,11 @@ dameRaiz nave = case nave of
 
 realizarImpacto :: TipoPeligro -> NaveEspacial -> NaveEspacial
 realizarImpacto tipo nave = case tipo of 
-										Pequeño -> if (dameRaiz nave) == Escudo then nave else Base Contenedor
-										Grande -> Base Contenedor -- preguntar esto, creo que antes no estaba mal
+										Pequeño -> if dameRaiz nave == Escudo then nave else Base Contenedor
+										Grande -> Base Contenedor
+										-- Otra posibilidad para el caso 'tipo == Grande' es si la nave tiene poderDeAtaque > 0 entonces 
+										-- es equivalente a 'realizarImpacto Pequeño nave' evitando hacer este chequeo en la funcion 'impactar', 
+										-- quedando mas prolijo, pero implicaria usar recursion explicita.
 										Torpedo -> Base Contenedor
 
 impactar :: Peligro -> NaveEspacial -> NaveEspacial

@@ -160,10 +160,6 @@ testsEj7 = test [
   [soloUnMotor, superProtegido] ~=? pruebaDeFuego [(Babor, 1, Pequeño), (Estribor, 1, Pequeño), (Estribor, 1, Grande), (Babor, 1, Grande), (Estribor, 1, Torpedo), (Babor, 1, Torpedo), (Babor, 2, Pequeño), (Estribor, 2, Pequeño), (Estribor, 2, Grande), (Babor, 2, Grande), (Estribor, 2, Torpedo), (Babor, 2, Torpedo)] [soloUnMotor, superProtegido, desbalanceado]
   ]
 
-
-
-
-
 testsEj8 = test [
 -- componentesPorNivel
   -- Caso: nave Base
