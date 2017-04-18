@@ -138,24 +138,24 @@ testsEj7 = test [
   ]
 
 testsEj8 = test [
-— componentesPorNivel
-  — Caso: nave Base
+-- componentesPorNivel
+  -- Caso: nave Base
   1 ~=? componentesPorNivel soloUnMotor 0,
-  — Caso: nave Modulo comp subNaveIzq subNaveDer
+  -- Caso: nave Modulo comp subNaveIzq subNaveDer
   4 ~=? componentesPorNivel nave4 2,
-  — Caso: nave con subNaves de distinta altura
+  -- Caso: nave con subNaves de distinta altura
   2 ~=? componentesPorNivel desbalanceado 2,
-  — Caso: nivel > (altura nave)
+  -- Caso: nivel > (altura nave)
   0 ~=? componentesPorNivel protegidoNivel1Estribor 9,
 
-— dimensiones
-  — Caso: nave Base
+-- dimensiones
+  -- Caso: nave Base
   (1,1) ~=? dimensiones soloUnMotor,
-  — Caso: nave Modulo comp subNaveIzq subNaveDer
+  -- Caso: nave Modulo comp subNaveIzq subNaveDer
   (3,4) ~=? dimensiones nave4,
-  — Caso: nave con subNaves de distinta altura
+  -- Caso: nave con subNaves de distinta altura
   (4,4) ~=? dimensiones (Módulo Motor (Base Escudo) superProtegido),
-  — Caso: dimensiones de maniobrar/impactar nave
+  -- Caso: dimensiones de maniobrar/impactar nave
   (4,6) ~=? (dimensiones $ maniobrar nave9 [(Babor,1,Grande),(Babor,2,Torpedo)])
   ]
 
