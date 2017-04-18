@@ -18,6 +18,10 @@ nave8 = Módulo Contenedor nave1 nave6
 nave9 = Módulo Escudo 
 		(Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
 		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo)))
+--nave10 = nave9 pero Escudo por Cañón, Cañón por Contenedor, Contenedor por Motor, Motor por Escudo
+nave10 = Módulo Cañón 
+    (Módulo Cañón (Módulo Cañón (Base Cañón) (Base Contenedor)) (Módulo Escudo (Base Motor) (Base Escudo))) 
+    (Módulo Cañón (Módulo Motor (Base Escudo) (Base Motor)) (Módulo Cañón (Base Contenedor) (Base Cañón)))
 
 soloUnMotor = Base Motor
 puroContenedor = Módulo Contenedor (Base Contenedor) (Base Contenedor)
@@ -52,59 +56,64 @@ allTests = test [
 
 testsEj2 = test [
   0 ~=? capacidad soloUnMotor,
-  3 ~=? capacidad puroContenedor
-  0 ~=? capacidad tresCañones
-  2 ~=? capacidad contenedorYCañon
-  2 ~=? capacidad otroCañon
-  2 ~=? capacidad escudoSinCañon
-  1 ~=? capacidad protegido
-  2 ~=? capacidad protegidoNivel1Estribor
-  2 ~=? capacidad superProtegido
-  2 ~=? capacidad desbalanceado
+  3 ~=? capacidad puroContenedor,
+  0 ~=? capacidad tresCañones,
+  2 ~=? capacidad contenedorYCañon,
+  2 ~=? capacidad otroCañon,
+  2 ~=? capacidad escudoSinCañon,
+  1 ~=? capacidad protegido,
+  2 ~=? capacidad protegidoNivel1Estribor,
+  2 ~=? capacidad superProtegido,
+  2 ~=? capacidad desbalanceado,
 
   0 ~=? poderDeAtaque soloUnMotor,
-  0 ~=? poderDeAtaque puroContenedor
-  3 ~=? poderDeAtaque tresCañones
-  1 ~=? poderDeAtaque contenedorYCañon
-  1 ~=? poderDeAtaque otroCañon
-  0 ~=? poderDeAtaque escudoSinCañon
-  1 ~=? poderDeAtaque protegido
-  1 ~=? poderDeAtaque protegidoNivel1Estribor
-  2 ~=? poderDeAtaque superProtegido
-  1 ~=? poderDeAtaque desbalanceado
+  0 ~=? poderDeAtaque puroContenedor,
+  3 ~=? poderDeAtaque tresCañones,
+  1 ~=? poderDeAtaque contenedorYCañon,
+  1 ~=? poderDeAtaque otroCañon,
+  0 ~=? poderDeAtaque escudoSinCañon,
+  1 ~=? poderDeAtaque protegido,
+  1 ~=? poderDeAtaque protegidoNivel1Estribor,
+  2 ~=? poderDeAtaque superProtegido,
+  1 ~=? poderDeAtaque desbalanceado,
 
   1 ~=? puedeVolar soloUnMotor,
-  0 ~=? puedeVolar puroContenedor
-  0 ~=? puedeVolar tresCañones
-  0 ~=? puedeVolar contenedorYCañon
-  0 ~=? puedeVolar otroCañon
-  0 ~=? puedeVolar escudoSinCañon
-  0 ~=? puedeVolar protegido
-  1 ~=? puedeVolar protegidoNivel1Estribor
-  0 ~=? puedeVolar superProtegido
-  0 ~=? puedeVolar desbalanceado
+  0 ~=? puedeVolar puroContenedor,
+  0 ~=? puedeVolar tresCañones,
+  0 ~=? puedeVolar contenedorYCañon,
+  0 ~=? puedeVolar otroCañon,
+  0 ~=? puedeVolar escudoSinCañon,
+  0 ~=? puedeVolar protegido,
+  1 ~=? puedeVolar protegidoNivel1Estribor,
+  0 ~=? puedeVolar superProtegido,
+  0 ~=? puedeVolar desbalanceado,
 
   1 ~=? mismoPotencial soloUnMotor nave1,
-  0 ~=? mismoPotencial puroContenedor tresCañones
-  1 ~=? mismoPotencial nave2 nave3
-  0 ~=? mismoPotencial contenedorYCañon otroCañon
-  1 ~=? mismoPotencial nave4 nave5
-  0 ~=? mismoPotencial escudoSinCañon protegido
-  1 ~=? mismoPotencial nave6 nave7
-  0 ~=? mismoPotencial protegidoNivel1Estribor superProtegido
+  0 ~=? mismoPotencial puroContenedor tresCañones,
+  1 ~=? mismoPotencial nave2 nave3,
+  0 ~=? mismoPotencial contenedorYCañon otroCañon,
+  1 ~=? mismoPotencial nave4 nave5,
+  0 ~=? mismoPotencial escudoSinCañon protegido,
+  1 ~=? mismoPotencial nave6 nave7,
+  0 ~=? mismoPotencial protegidoNivel1Estribor superProtegido,
   0 ~=? mismoPotencial superProtegido desbalanceado
   ]
   
   testsEj3 = test [
-  nave4 ~=? mayorCapacidad [nave4, nave2, nave3]
-  nave5 ~=? mayorCapacidad [nave2, nave3, nave5]
-  nave9 ~=? mayorCapacidad [nave7, nave8, nave9]
-  puroContenedor ~=? mayorCapacidad [protegido, puroContenedor, contenedorYCañon]
+  nave4 ~=? mayorCapacidad [nave4, nave2, nave3],
+  nave5 ~=? mayorCapacidad [nave2, nave3, nave5],
+  nave9 ~=? mayorCapacidad [nave7, nave8, nave9],
+  puroContenedor ~=? mayorCapacidad [protegido, puroContenedor, contenedorYCañon],
   desbalanceado ~=? mayorCapacidad [desbalanceado, protegido, soloUnMotor]
   ]
 
 testsEj4 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  soloUnMotor ~=? transformar (const Motor) nave9,
+  tresCañones ~=? transformar (\comp -> if comp == Contenedor then Cañón else comp) puroContenedor,
+  nave10 ~=? transformar (\comp -> case comp of Escudo -> Cañón
+                                                Cañón -> Contenedor
+                                                Contenedor -> Motor
+                                                Motor -> Escudo) nave9
   ]
 
 testsEj5 = test [
@@ -129,14 +138,24 @@ testsEj7 = test [
   ]
 
 testsEj8 = test [
-  -- Caso: nave Base
+— componentesPorNivel
+  — Caso: nave Base
   1 ~=? componentesPorNivel soloUnMotor 0,
-  -- Caso: nave Modulo comp subNaveIzq subNaveDer
+  — Caso: nave Modulo comp subNaveIzq subNaveDer
   4 ~=? componentesPorNivel nave4 2,
-  -- Caso: nave con subNaves de distinta altura
+  — Caso: nave con subNaves de distinta altura
   2 ~=? componentesPorNivel desbalanceado 2,
-  -- Caso: nivel > (altura nave)
+  — Caso: nivel > (altura nave)
   0 ~=? componentesPorNivel protegidoNivel1Estribor 9,
+
+— dimensiones
+  — Caso: nave Base
+  (1,1) ~=? dimensiones soloUnMotor,
+  — Caso: nave Modulo comp subNaveIzq subNaveDer
+  (3,4) ~=? dimensiones nave4,
+  — Caso: nave con subNaves de distinta altura
+  (4,4) ~=? dimensiones (Módulo Motor (Base Escudo) superProtegido),
+  — Caso: dimensiones de maniobrar/impactar nave
   (4,6) ~=? (dimensiones $ maniobrar nave9 [(Babor,1,Grande),(Babor,2,Torpedo)])
   ]
 
