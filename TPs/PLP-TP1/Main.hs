@@ -53,10 +53,54 @@ allTests = test [
 testsEj2 = test [
   0 ~=? capacidad soloUnMotor,
   3 ~=? capacidad puroContenedor
-  ]
+  0 ~=? capacidad tresCañones
+  2 ~=? capacidad contenedorYCañon
+  2 ~=? capacidad otroCañon
+  2 ~=? capacidad escudoSinCañon
+  1 ~=? capacidad protegido
+  2 ~=? capacidad protegidoNivel1Estribor
+  2 ~=? capacidad superProtegido
+  2 ~=? capacidad desbalanceado
 
-testsEj3 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  0 ~=? poderDeAtaque soloUnMotor,
+  0 ~=? poderDeAtaque puroContenedor
+  3 ~=? poderDeAtaque tresCañones
+  1 ~=? poderDeAtaque contenedorYCañon
+  1 ~=? poderDeAtaque otroCañon
+  0 ~=? poderDeAtaque escudoSinCañon
+  1 ~=? poderDeAtaque protegido
+  1 ~=? poderDeAtaque protegidoNivel1Estribor
+  2 ~=? poderDeAtaque superProtegido
+  1 ~=? poderDeAtaque desbalanceado
+
+  1 ~=? puedeVolar soloUnMotor,
+  0 ~=? puedeVolar puroContenedor
+  0 ~=? puedeVolar tresCañones
+  0 ~=? puedeVolar contenedorYCañon
+  0 ~=? puedeVolar otroCañon
+  0 ~=? puedeVolar escudoSinCañon
+  0 ~=? puedeVolar protegido
+  1 ~=? puedeVolar protegidoNivel1Estribor
+  0 ~=? puedeVolar superProtegido
+  0 ~=? puedeVolar desbalanceado
+
+  1 ~=? mismoPotencial soloUnMotor nave1,
+  0 ~=? mismoPotencial puroContenedor tresCañones
+  1 ~=? mismoPotencial nave2 nave3
+  0 ~=? mismoPotencial contenedorYCañon otroCañon
+  1 ~=? mismoPotencial nave4 nave5
+  0 ~=? mismoPotencial escudoSinCañon protegido
+  1 ~=? mismoPotencial nave6 nave7
+  0 ~=? mismoPotencial protegidoNivel1Estribor superProtegido
+  0 ~=? mismoPotencial superProtegido desbalanceado
+  ]
+  
+  testsEj3 = test [
+  nave4 ~=? mayorCapacidad [nave4, nave2, nave3]
+  nave5 ~=? mayorCapacidad [nave2, nave3, nave5]
+  nave9 ~=? mayorCapacidad [nave7, nave8, nave9]
+  puroContenedor ~=? mayorCapacidad [protegido, puroContenedor, contenedorYCañon]
+  desbalanceado ~=? mayorCapacidad [desbalanceado, protegido, soloUnMotor]
   ]
 
 testsEj4 = test [
