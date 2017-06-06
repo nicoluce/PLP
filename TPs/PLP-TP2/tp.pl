@@ -27,6 +27,17 @@
 	mochilaDeCElem(0, []).
 	mochilaDeCElem(C, [X|M]) :- C > 0, D is C - 1, mochilaDeCElem(D, M), herramienta(X,_).
 
+	%% cantApariciones(+X, +L, ?N)
+	cantApariciones(_, [], 0).
+	cantApariciones(X, [X|L], M) :- cantApariciones(X, L, N), M is N +1.
+	cantApariciones(X, [Y|L], M) :- X \= Y, cantApariciones(X, L, M).
+
+	%% compAHerramientas(+Cs, ?Hs)
+	compAHerramientas([], []).
+	compAHerramientas([X|Cs], [X|Hs]) :- herramienta(X, _), compAHerramientas(Cs, Hs).
+	compAHerramientas([binaria(X, Y)|Cs], Hs) :- compAHerramientas([X, Y|Cs], Hs).
+	compAHerramientas([jerarquica(X,Y)|Cs], Hs) :- compAHerramientas([X, Y|Cs], Hs).
+
 
 %% Herramientas basicas
 	herramienta(rayo, 10).
@@ -56,18 +67,22 @@
 	configuracion([X], X, P, 1) :- herramienta(X, P).
 	configuracion([X, Y], binaria(X, Y), P, C) :- composicion(binaria(X, Y), P, C).
 	configuracion(L, jerarquica(X, ConfL), P, C) :- sort(L, LsinRepetidos), nesimo(_, LsinRepetidos, X), 
-														%% Elijo un elemnto de LsinRepetidos como X 
-														%% (ya que para la mochila [rayo_1, rayo_2, rayo_3, volatilizador] es indistinto que rayo es X) 
+														%% Elegimos un elemnto de LsinRepetidos como X 
+														%% (ya que para la mochila [rayo_1, rayo_2, rayo_3, 
+														%% volatilizador] es indistinto que rayo es X) 
+
 													setof(Ls, borrar(X, L, Ls), Lss), nesimo(0, Lss, LsinX),
-														%% y tomo la submochila resultante de borrar la 1ra aparicion de X 
-														%% (como el orden de los elementos no importa las mochilas [rayo, volatilizador] y [volatilizador, rayo] son indistintas).
+														%% y tomamos la submochila resultante de borrar la 1ra aparicion de X 
+														%% (como el orden de los elementos no importa las mochilas 
+														%% [rayo, volatilizador] y [volatilizador, rayo] son indistintas).
 
 													herramienta(X, PX), setof((PL, CL), configuracion(LsinX, ConfL, PL, CL), L2),
-														%% Como lo unico que necesito de ConfL es su potencia y costo, uso setof() para filtrar soluciones repetidas.
+														%% Como lo unico que necesitamos de ConfL es su potencia y costo,
+														%% usamos setof() para filtrar soluciones repetidas.
+
 													member((PL, CL), L2), P is PL*PX, C is 2*(CL+1).
-														%% Para cada configuracion con par (PL, CL) distinto, calculo P y C como especifica el enunciado.
-
-
+														%% Para cada configuracion con par (PL, CL) distinto, 
+														%% calculamos P y C como especifica el enunciado.
 	%% Ejemplos:
 		%% configuracion([rayo,rayo],Conf,P,C).
 			%% Conf = binaria(rayo, rayo),
@@ -107,10 +122,9 @@
 
 %% Ejercicio 3
 	%% masPoderosa(+M1, +M2)
-	masPoderosa(M1, M2) :- 	configuracion(M1, _, P1, _), configuracion(M2, Conf2, P2, _), P1 > P2, 
-								%% Dada una configuracion de M1 con potencia P1, busco una configuracion de M2, tal que su potencia sea menor a P1,
-							not((configuracion(M2, Conf3, P3, _), Conf3 \= Conf2, P3 >= P1)).
-								%% y que no exista otra configuracion de M2, distinta a la ya encontrada, tal que su potencia sea mayor o igual a P1.
+	masPoderosa(M1, M2) :- 	configuracion(M1, _, P1, _), not((configuracion(M2, _, P2, _), P2 >= P1)).
+								%% M1 es mas poderosa que M2 cuando dada una configuracion de M1 con potencia P1, 
+								%% no exista una configuracion de M2, tal que su potencia sea mayor o igual a P1.
 	%% Ejemplos:
 		%% masPoderosa([rayo, volatilizador], [volatilizador, rayo]).
 			%% false.
@@ -124,25 +138,54 @@
 
 %% Ejercicio 5
 	%% usar(+M1,+Ps,?Cs,?M2)
-	usar(M1, [], [], M1).
+	usar(M1, [], [], M1). 
+		%% De esta forma nos aseguramos que no hayan elementos en M2 que nunca estuvieron en M1.
+
 	usar(M1, [P|Ps], [C|Cs], M2) :- setof(Ls, sublista(Ls, M1), Lss), member(Ls, Lss), Ls \= [],
-										%% Una submochilas distintas de [].
+										%% Dada una submochilas distintas de [],
+
 									configuracion(Ls, C, P1, _), P1 >= P,
-										%% Busco una configuracion valida apartir de la submochila, tal que su potencia sea mayor o igual a P. 
-									borrarLista(Ls, M1, M3), usar(M3, Ps, Cs, M2).
-										%% Saco los elementos de la submochila de la mochila original y hago recursion sobre el resultado.
+										%% buscamos una configuracion valida apartir de la submochila, 
+										%% tal que su potencia sea mayor o igual a P.
+									
+									borrarLista(Ls, M1, M3), usar(M3, Ps, Cs, M2),
+										%% Sacamos los elementos de la submochila de la mochila original 
+										%% y que exista un uso valido de la mochila resultante para las colas de las listas Ps y Cs.
+
+									compAHerramientas([C|Cs], Usados), borrarLista(Usados, M1, SinUsar),
+										%% Una vez que Cs fue instanciada correctamente, construimos la lista de herramientas sin usar (SinUsar) 
+										%% en base a las herramientas usadas (Cs),
+									
+									not((nesimo(_, SinUsar, H), cantApariciones(H, SinUsar, N), cantApariciones(H, M2, M), N < M)).
+										%% y confirmamos que SinUsar es igual a M2.
+	%% Ejemplos:
+		%% usar([rayo,rayo,rayo,rayo],[100],C,[rayo,rayo]).
+			%% C = [jerarquica(rayo, rayo)] ;
+
+		%% usar([rayo,rayo,rayo,rayo],[10,10],C,[rayo,rayo]).
+			%% C = [rayo, rayo] ;
+
+		%% usar([rayo,rayo,volatilizador,rayo,encendedor],[30,80],C,[encendedor]).
+			%% [...]
+			%% C = [binaria(rayo, rayo), jerarquica(rayo, volatilizador)] ;
+			%% C = [binaria(rayo, rayo), binaria(volatilizador, rayo)] ;
+			%% C = [jerarquica(rayo, rayo), jerarquica(rayo, volatilizador)] ;
+			%% [...]
 
 %% Ejercicio 6
 	%% comprar(+P,+C,?M)
 	comprar(P, C, M) :- between(1, C, N), mochilaDeCElem(N, M),
-							%% Construyo todas las mochilas con a lo sumo C elementos.
-						findall(M, (configuracion(M, _, P1, _), P1 >= P), Ls), 	
-							%% Construyo una lista con el elemento M, 
-							%% donde la cantidad de apariciones será dada 
-							%% por la cantidad de configuraciones distintas que cumplan que P1 >= P. (Generate & Test en una consulta)
+							%% Construimos todas las mochilas con a lo sumo C elementos.
+						
+						findall(M, (configuracion(M, _, P1, _), P1 >= P), Ls),
+							%% Construimos una lista con el elemento M, 
+							%% donde la cantidad de apariciones sera dada 
+							%% por la cantidad de configuraciones distintas que cumplan que P1 >= P. 
+							%% (Generate & Test en una consulta)
 
 							%% Esto es para evitar soluciones repetidas, ya que para el caso comprar(100, 4, M)
-							%% M = [rayo, rayo] resulta de dos configuraciones distintas, 
-							%% jerarquica(rayo_1, rayo_2) y jerarquica(rayo_2, rayo_1).
+							%% M = [rayo, volatilizador] resulta de dos configuraciones distintas, 
+							%% jerarquica(rayo, volatilizador) y jerarquica(volatilizador, rayo).
+						
 						nesimo(0, Ls, M).
 
