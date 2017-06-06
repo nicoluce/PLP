@@ -33,7 +33,7 @@
 %% Funciones
 	%% composicion(+Composicion, ?Potencial, ?Costo)
 	composicion(X, P, 1) :- herramienta(X, P).
-	composicion(binaria(X, Y), P, 5) :- herramienta(X, PX), herramienta(Y, PY), P is 2*PX+PY.
+	composicion(binaria(X, Y), P, 5)  :- herramienta(X, PX), herramienta(Y, PY), P is 2*PX+PY.
 
 %% Ejercicio 1
 	composicion(jerarquica(X, Y), P, C) :- composicion(X, PX, CX), composicion(Y, PY, CY), P is PX*PY, C is 2*(CX+CY).
@@ -43,3 +43,9 @@
 	configuracion([X], X, P, 1) :- herramienta(X, P).
 	configuracion([X, Y], binaria(X, Y), P, C) :- composicion(binaria(X, Y), P, C).
 	configuracion(L, jerarquica(X, ConfL), P, C) :- nesimo(_, L, X), borrar(X, L, LsinX), herramienta(X, PX), configuracion(LsinX, ConfL, PL, CL), P is PL*PX, C is 2*(CL+1).
+
+
+%% Ejercicio 3
+%% masPoderosa(+M1, +M2)
+masPoderosa(M1, M2) :- configuracion(M1,Conf,P1,Costo), not(configuracion(M2,Conf2,P2,Costo2), P1 > P2).
+
