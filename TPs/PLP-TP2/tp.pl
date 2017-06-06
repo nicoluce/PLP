@@ -135,7 +135,8 @@
 	
 %% Ejercicio 4
 	%% mejor(+M1,+M2)
-	mejor(M1, M2) :- not((configuracion(M2, _, PM2, CM2), ((configuracion(M1, _, PM1, CM1), PM2 >= PM1, CM2 < CM1); not(configuracion(M1, _, PM1, CM1))))).
+	mejor(M1, M2) :- not((configuracion(M2, _, PM2, CM2), ((configuracion(M1, _, PM1, CM1), PM2 >= PM1, CM2 < CM1); 
+					not(configuracion(M1, _, PM1, CM1))))).
 
 %% Ejercicio 5
 	%% usar(+M1,+Ps,?Cs,?M2)
