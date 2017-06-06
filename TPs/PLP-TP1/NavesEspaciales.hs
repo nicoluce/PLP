@@ -1,3 +1,4 @@
+-- PLP TP1 - 'Los Militantes de Andy'
 module NavesEspaciales (Componente(Contenedor, Motor, Escudo, Cañón), NaveEspacial(Módulo, Base), Dirección(Babor, Estribor), TipoPeligro(Pequeño, Grande, Torpedo), Peligro, foldNave, capacidad, poderDeAtaque, puedeVolar, mismoPotencial, mayorCapacidad, transformar, impactar, maniobrar, pruebaDeFuego, componentesPorNivel, dimensiones) where
 
 data Componente = Contenedor | Motor | Escudo | Cañón deriving (Eq, Show)
