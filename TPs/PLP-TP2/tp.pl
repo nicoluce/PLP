@@ -122,7 +122,6 @@
 
 %% Ejercicio 3
 	%% masPoderosa(+M1, +M2)
-<<<<<<< HEAD
 	masPoderosa(M1, M2) :- 	configuracion(M1, _, P1, _), not((configuracion(M2, _, P2, _), P2 >= P1)).
 								%% M1 es mas poderosa que M2 cuando dada una configuracion de M1 con potencia P1, 
 								%% no exista una configuracion de M2, tal que su potencia sea mayor o igual a P1.
@@ -133,10 +132,7 @@
 			%% false.
 		%% masPoderosa([rayo, volatilizador], [rayo, rayo]).
 			%% true.
-=======
-	masPoderosa(M1, M2) :- configuracion(M1,Conf,P1,C), configuracion(M2,Conf2,P2,C2), P1 > P2, not((configuracion(M2,Conf3,P3,C3), Conf3\=Conf2, P3 >= P1)).
->>>>>>> 37b5a37798e5f37cd6667fd46a89c0ca2c0b45e3
-	
+
 %% Ejercicio 4
 	%% mejor(+M1,+M2)
 
